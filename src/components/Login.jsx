@@ -10,7 +10,7 @@ const Login = ({ signInWithEmail, signInWithGoogle }) => {
         <Box>
             <TextField
                 label="Email"
-                variant="outlined"
+                variant="standard"
                 fullWidth
                 margin="normal"
                 value={email}
@@ -18,7 +18,7 @@ const Login = ({ signInWithEmail, signInWithGoogle }) => {
             />
             <TextField
                 label="Password"
-                variant="outlined"
+                variant="standard"
                 type="password"
                 fullWidth
                 margin="normal"

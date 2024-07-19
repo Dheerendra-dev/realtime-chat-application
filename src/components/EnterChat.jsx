@@ -33,6 +33,7 @@ const EnterChat = ({ userData }) => {
         const roomExists = await checkRoomExists(roomID);
         if (roomExists) {
             setRoom(roomID);
+            navigate(`/chat/${roomID}`);
         } else {
             alert("Room does not exist or has expired.");
         }
@@ -47,7 +48,7 @@ const EnterChat = ({ userData }) => {
             <div className='justify-center flex'>
                 <Paper sx={{ width: 500, p: 2 }}>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                        <Typography variant="p">Your Room ID: {room}</Typography>
+                        <Typography variant="p">Your Room ID:  <span style={{ color: "#8E24AA", fontWeight: "bold" }}> {room}</span></Typography>
                         <Button variant="contained" color="primary" onClick={copyToClipboard}>
                             Copy
                         </Button>

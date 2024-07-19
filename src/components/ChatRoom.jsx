@@ -10,6 +10,7 @@ import {
     query,
     orderBy,
     deleteDoc,
+    serverTimestamp,
 } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import Cookies from "universal-cookie";
@@ -36,13 +37,8 @@ const ChatRoom = () => {
     const messagesRef = collection(db, "messages");
     const user = auth?.currentUser;
 
-    const getCurrentTime = () => {
-        const now = new Date();
-        const options = { hour: "numeric", minute: "numeric", hour12: true };
-        return now.toLocaleTimeString("en-US", options);
-    };
-
     useEffect(() => {
+        localStorage.setItem("room", room);
         const fetchMessages = async () => {
             setLoading(true);
             try {
@@ -75,7 +71,7 @@ const ChatRoom = () => {
         try {
             await addDoc(messagesRef, {
                 text: newMessage,
-                createdAt: getCurrentTime(),
+                createdAt: serverTimestamp(),
                 user: user?.displayName,
                 room,
                 userInfo: user?.uid,
@@ -87,30 +83,6 @@ const ChatRoom = () => {
         }
     };
 
-    const signUserOut = async () => {
-        if (room) {
-            const roomQuery = query(
-                collection(db, "linkIds"),
-                where("linkId", "==", room)
-            );
-            const roomSnapshot = await getDocs(roomQuery);
-            roomSnapshot.forEach(async (roomDoc) => {
-                await deleteDoc(roomDoc.ref);
-            });
-
-            const messagesRef = collection(db, "messages");
-            const q = query(messagesRef, where("room", "==", room));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach(async (messageDoc) => {
-                await deleteDoc(messageDoc.ref);
-            });
-        }
-
-        await signOut(auth);
-        cookies.remove("auth-token");
-        cookies.remove("link-id");
-        navigate("/");
-    };
 
     if (loading) {
         return (
@@ -128,24 +100,26 @@ const ChatRoom = () => {
     if (error) {
         return <div>Error: {error}</div>;
     }
+
     const joinAnotherRoom = () => {
         navigate(`/chat`);
     }
+
     return (
-        <div className="bg-gray-900 w-screen h-screen justify-center flex items-center">
-            <Container maxWidth="sm">
+        <div className="bg-gray-900 w-screen h-screen justify-center flex pt-8">
+            <Container maxWidth="md">
                 <Paper elevation={3} style={{ padding: "1rem", marginTop: "1rem" }}>
-                    <Typography variant="p" gutterBottom>
-                        Welcome to <span style={{ color: "#8E24AA" }}>{room.toUpperCase()}</span> Room
+                    <Typography variant="p" gutterBottom mb={4}>
+                        Welcome to <span style={{ color: "#8E24AA", fontWeight: "bold" }}>{room.toUpperCase()}</span> Room
                     </Typography>
                     <Box
                         display="flex"
                         flexDirection="column"
-                        height="300px"
+                        height="400px"
                         overflow="auto"
                         style={{ backgroundColor: "#F5F5F5", padding: "1rem" }}
                     >
-                        {messages.map((message) => {
+                        {messages?.map((message) => {
                             const isCurrentUser = message?.userInfo === user?.uid;
                             return (
                                 <Box
@@ -164,14 +138,11 @@ const ChatRoom = () => {
                                     <Box
                                         bgcolor={isCurrentUser ? "#8E24AA" : "#616161"}
                                         color="white"
-                                        p={2}
-                                        borderRadius={8}
+                                        borderRadius={2}
+                                        p={1}
                                         maxWidth="70%"
                                     >
-                                        <Typography variant="subtitle2">
-                                            {message?.user} <span style={{ fontSize: "0.8rem" }}>{message?.createdAt}</span>
-                                        </Typography>
-                                        <Typography variant="body2" style={{ wordBreak: "break-word" }}>
+                                        <Typography variant="body2" className="">
                                             {message?.text}
                                         </Typography>
                                     </Box>
@@ -198,15 +169,7 @@ const ChatRoom = () => {
                             Send
                         </Button>
                     </form>
-                    <Button
-                        onClick={signUserOut}
-                        variant="contained"
-                        color="secondary"
-                        fullWidth
-                        style={{ marginTop: "1rem" }}
-                    >
-                        Sign Out
-                    </Button>
+
                     <Button
                         onClick={joinAnotherRoom}
                         variant="contained"
