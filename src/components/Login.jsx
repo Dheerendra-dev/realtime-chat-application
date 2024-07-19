@@ -1,6 +1,5 @@
-import { Button, TextField, Box } from '@mui/material';
-
 import { useState } from 'react';
+import { Button, TextField, Box } from '@mui/material';
 
 const Login = ({ signInWithEmail, signInWithGoogle }) => {
     const [email, setEmail] = useState('');

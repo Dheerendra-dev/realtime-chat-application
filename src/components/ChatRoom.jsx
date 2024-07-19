@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 import { db, auth } from "../Db/firebaseConfig";
 import {
     collection,
     addDoc,
-    getDocs,
-    doc,
     where,
     onSnapshot,
     query,
     orderBy,
-    deleteDoc,
     serverTimestamp,
 } from "firebase/firestore";
-import { signOut } from "firebase/auth";
-import Cookies from "universal-cookie";
-import { useNavigate, useParams } from "react-router-dom";
 import {
     Container,
     Paper,
@@ -26,7 +22,6 @@ import {
     CircularProgress,
 } from "@mui/material";
 
-const cookies = new Cookies();
 const ChatRoom = () => {
     const { room } = useParams()
     const navigate = useNavigate();

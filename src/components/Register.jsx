@@ -1,5 +1,5 @@
-import { Button, TextField, Box } from '@mui/material';
 import { useState } from 'react';
+import { Button, TextField, Box } from '@mui/material';
 
 const Register = ({ signUpWithEmail }) => {
     const [email, setEmail] = useState('');

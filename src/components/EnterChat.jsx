@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChatRoom from './ChatRoom';
+import { db } from '../Db/firebaseConfig';
+
 import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import Cookies from 'universal-cookie';
-import { db } from '../Db/firebaseConfig';
 
 const EnterChat = ({ userData }) => {
     const navigate = useNavigate();

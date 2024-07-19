@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db, provider } from "../Db/firebaseConfig";
-import { Typography, Container, Box, Tabs, Tab } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 import Login from './Login';
 import Register from './Register';
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import Cookies from 'universal-cookie';
+import { auth, db, provider } from "../Db/firebaseConfig";
+
 import { nanoid } from 'nanoid'
-import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
+
+import { Typography, Container, Box, Tabs, Tab } from '@mui/material';
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
 const AuthProvider = ({ setUserData }) => {
     const id = nanoid()
