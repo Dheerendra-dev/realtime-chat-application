@@ -7,9 +7,11 @@ import Register from './Register';
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import Cookies from 'universal-cookie';
 import { nanoid } from 'nanoid'
+import { useNavigate } from 'react-router-dom';
 
 const AuthProvider = ({ setUserData }) => {
     const id = nanoid()
+    const navigate = useNavigate()
     const cookies = new Cookies();
     const [tab, setTab] = useState(0);
     const signInWithGoogle = async () => {
@@ -22,7 +24,9 @@ const AuthProvider = ({ setUserData }) => {
             });
             cookies.set("auth-token", user.refreshToken);
             cookies.set("link-id", id);
+            localStorage.setItem('userId', user.uid);
             setUserData(user)
+            navigate("/chat")
         } catch (err) {
             console.error(err);
         }
@@ -31,7 +35,6 @@ const AuthProvider = ({ setUserData }) => {
     const signInWithEmail = async (email, password) => {
         try {
             const { user } = await signInWithEmailAndPassword(auth, email, password);
-            console.log(user);
             await addDoc(collection(db, "linkIds"), {
                 user: user.uid,
                 linkId: id,
@@ -40,6 +43,7 @@ const AuthProvider = ({ setUserData }) => {
             cookies.set("auth-token", user.refreshToken);
             cookies.set("link-id", id);
             setUserData(user)
+            navigate("/chat")
         } catch (error) {
             console.error("Error signing in with email", error);
         }

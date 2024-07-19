@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import AuthProvider from './components/Auth';
-
-import { Routes, Route, useLocation } from 'react-router-dom';
+import EnterChat from './components/EnterChat';
+import ChatRoom from './components/ChatRoom';
+import ProtectedRoute from './components/ProtectedRoute'; // Import the ProtectedRoute component
+import Cookies from 'universal-cookie';
 
 const App = () => {
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+  const cookies = new Cookies();
+  const isAuth = cookies.get('auth-token');
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/chat');
+    }
+  }, []);
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<AuthProvider setUserData={setUserData} />} />
-    </Routes>
+    <div className="w-screen flex justify-center items-center">
+      <Routes>
+        <Route path="/" element={<AuthProvider setUserData={setUserData} />} />
+        <Route
+          path="/chat"
+          element={<ProtectedRoute element={EnterChat} userData={userData} />}
+        />
+        <Route
+          path="/chat/:room"
+          element={<ProtectedRoute element={ChatRoom} />}
+        />
+      </Routes>
+    </div>
   );
 };
 

@@ -27,7 +27,7 @@ const Login = ({ signInWithEmail, signInWithGoogle }) => {
             />
             <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 fullWidth
                 onClick={() => signInWithEmail(email, password)}
                 sx={{ mt: 2 }}
@@ -36,7 +36,7 @@ const Login = ({ signInWithEmail, signInWithGoogle }) => {
             </Button>
             <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 fullWidth
                 onClick={() => signInWithGoogle(email, password)}
                 sx={{ mt: 2 }}
